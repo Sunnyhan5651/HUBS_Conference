@@ -14,6 +14,7 @@ bond_event_study.py
 """
 
 import os
+import unicodedata
 import warnings
 import pandas as pd
 import numpy as np
@@ -40,6 +41,39 @@ def _set_korean_font():
     plt.rcParams["axes.unicode_minus"] = False  # 마이너스 기호 깨짐 방지
 
 _set_korean_font()
+
+# ── 한글 너비 보정 테이블 출력 헬퍼
+def _dw(s: str) -> int:
+    """터미널 표시 너비 (한글·CJK = 2, 나머지 = 1)"""
+    return sum(2 if unicodedata.east_asian_width(c) in ("W", "F") else 1 for c in str(s))
+
+def _pad(s: str, width: int, align: str = "right") -> str:
+    s = str(s)
+    pad = width - _dw(s)
+    if align == "left":
+        return s + " " * pad
+    return " " * pad + s
+
+def print_table(df: pd.DataFrame, title: str = "") -> None:
+    """한글 너비를 고려한 정렬된 테이블 출력"""
+    cols = list(df.columns)
+    rows = [[str(df.iloc[i, j]) for j in range(len(cols))] for i in range(len(df))]
+
+    col_widths = [max(_dw(c), max((_dw(r[j]) for r in rows), default=0))
+                  for j, c in enumerate(cols)]
+
+    sep = "─" * (sum(col_widths) + 3 * len(cols) + 1)
+    if title:
+        print(f"\n{sep}")
+        print(f"  {title}")
+    print(sep)
+    header = "│ " + " │ ".join(_pad(c, col_widths[j], "left") for j, c in enumerate(cols)) + " │"
+    print(header)
+    print(sep)
+    for row in rows:
+        line = "│ " + " │ ".join(_pad(v, col_widths[j]) for j, v in enumerate(row)) + " │"
+        print(line)
+    print(sep)
 
 # ──────────────────────────────────────────────────────────────
 # 0. 경로 설정
@@ -225,9 +259,9 @@ for sid, label in MATURITIES.items():
     st = compute_stats(ar_mat)
     results[sid]  = {"ar": ar_mat, "meta": meta, "stats": st, "label": label}
     n_events[sid] = len(ar_mat)
-    print(f"  {label:>4s} : {len(ar_mat)}건 | "
-          f"CAAR[0,+5]={ar_mat.loc[:, 0:5].sum(axis=1).mean():.4f}%  "
-          f"t={st.loc[0,'t_stat']:.2f}")
+    print(f"  {label:<3s}  {len(ar_mat):2d}건 │ "
+          f"CAAR[0,+5] = {ar_mat.loc[:, 0:5].sum(axis=1).mean():+8.4f}%  "
+          f"t(t=0) = {st.loc[0,'t_stat']:+6.2f}")
 
 # ──────────────────────────────────────────────────────────────
 # 5. 방향 조정 분석 (Direction-Adjusted)
@@ -258,9 +292,9 @@ for sid, label in MATURITIES.items():
     st_adj  = compute_stats(ar_adj)
     dir_results[sid] = {"ar_adj": ar_adj, "stats": st_adj, "n": len(ar_adj), "label": label}
 
-    print(f"  {label:>4s} : 방향 유효 {len(ar_adj)}건 | "
-          f"Dir-Adj CAAR[0,+5]={ar_adj.loc[:, 0:5].sum(axis=1).mean():.4f}%  "
-          f"t_dir={st_adj.loc[0,'t_stat']:.2f}")
+    print(f"  {label:<3s}  {len(ar_adj):2d}건 │ "
+          f"Dir-Adj CAAR[0,+5] = {ar_adj.loc[:, 0:5].sum(axis=1).mean():+8.4f}%  "
+          f"t_dir(t=0) = {st_adj.loc[0,'t_stat']:+6.2f}")
 
 # ──────────────────────────────────────────────────────────────
 # 6. 시각화
@@ -423,10 +457,6 @@ if sid_10y in results:
 # ──────────────────────────────────────────────────────────────
 # 7. 결과 테이블 출력 및 CSV 저장
 # ──────────────────────────────────────────────────────────────
-print("\n" + "─" * 60)
-print("【 만기별 이벤트 창 통계 요약 (Main 표본) 】")
-print("─" * 60)
-
 summary_rows = []
 for sid in SID_LIST:
     st  = results[sid]["stats"]
@@ -434,47 +464,56 @@ for sid in SID_LIST:
     n   = n_events[sid]
     for day in DAYS:
         summary_rows.append({
-            "만기"        : lbl,
-            "FRED코드"    : sid,
-            "상대일"      : day,
-            "AAR(%)"      : round(st.loc[day, "AAR"] * 100, 5),
-            "CAAR(%)"     : round(st.loc[day, "CAAR"] * 100, 5),
-            "t_stat"      : round(st.loc[day, "t_stat"], 3),
-            "p_value"     : round(st.loc[day, "p_value"], 4),
-            "유의(5%)"    : "★" if st.loc[day, "sig"] else "",
-            "이벤트수"    : n,
+            "만기"    : lbl,
+            "상대일"  : f"{day:+d}",
+            "AAR(%)"  : f"{st.loc[day, 'AAR'] * 100:+.4f}",
+            "CAAR(%)" : f"{st.loc[day, 'CAAR'] * 100:+.4f}",
+            "t_stat"  : f"{st.loc[day, 't_stat']:+.3f}",
+            "p_value" : f"{st.loc[day, 'p_value']:.4f}",
+            "유의"    : "★" if st.loc[day, "sig"] else "",
+            "N"       : str(n),
         })
 
 summary_df = pd.DataFrame(summary_rows)
 summary_df.to_csv(os.path.join(OUT_DIR, "event_study_results.csv"),
                   index=False, encoding="utf-8-sig")
-print(summary_df[summary_df["유의(5%)"] == "★"].to_string(index=False))
-print(f"\n전체 결과 저장: output/event_study_results.csv")
+
+sig_df = summary_df[summary_df["유의"] == "★"].reset_index(drop=True)
+print_table(sig_df, "유의한 결과 (p < 0.05, Main 표본)")
+print(f"\n  전체 결과 저장 → output/event_study_results.csv")
 
 # ── 이벤트 당일(t=0) 요약 테이블
-print("\n【 이벤트 당일(t=0) 요약 】")
-t0_df = summary_df[summary_df["상대일"] == 0][
-    ["만기", "이벤트수", "AAR(%)", "t_stat", "p_value", "유의(5%)"]
-].reset_index(drop=True)
-print(t0_df.to_string(index=False))
+t0_rows = []
+for sid in SID_LIST:
+    st  = results[sid]["stats"]
+    lbl = results[sid]["label"]
+    n   = n_events[sid]
+    t0_rows.append({
+        "만기"    : lbl,
+        "N"       : str(n),
+        "AAR(%)"  : f"{st.loc[0, 'AAR'] * 100:+.4f}",
+        "t_stat"  : f"{st.loc[0, 't_stat']:+.3f}",
+        "p_value" : f"{st.loc[0, 'p_value']:.4f}",
+        "유의"    : "★" if st.loc[0, "sig"] else "",
+    })
+print_table(pd.DataFrame(t0_rows), "이벤트 당일(t=0) 요약")
 
 # ── 방향 조정 결과 요약
-print("\n【 방향 조정(t=0) 요약 — 가설: 제도화 이벤트가 수익률에 정방향 충격 】")
 dir_rows = []
 for sid in [s for s in SID_LIST if s in dir_results]:
     st  = dir_results[sid]["stats"]
     lbl = results[sid]["label"]
     n   = dir_results[sid]["n"]
     dir_rows.append({
-        "만기"       : lbl,
-        "유효이벤트" : n,
-        "Dir-Adj AAR(%)": round(st.loc[0, "AAR"] * 100, 5),
-        "t_stat"     : round(st.loc[0, "t_stat"], 3),
-        "p_value"    : round(st.loc[0, "p_value"], 4),
-        "유의(5%)"   : "★" if st.loc[0, "sig"] else "",
+        "만기"          : lbl,
+        "유효 N"        : str(n),
+        "Dir-Adj AAR(%)": f"{st.loc[0, 'AAR'] * 100:+.4f}",
+        "t_stat"        : f"{st.loc[0, 't_stat']:+.3f}",
+        "p_value"       : f"{st.loc[0, 'p_value']:.4f}",
+        "유의"          : "★" if st.loc[0, "sig"] else "",
     })
 dir_df = pd.DataFrame(dir_rows)
-print(dir_df.to_string(index=False))
+print_table(dir_df, "방향 조정(t=0) — 긍정 이벤트→수익률↑, 부정 이벤트→수익률↓ 가설")
 dir_df.to_csv(os.path.join(OUT_DIR, "direction_adjusted_t0.csv"),
               index=False, encoding="utf-8-sig")
 
