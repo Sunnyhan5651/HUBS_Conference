@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>스테이블코인 이벤트와 시장 반응 · 2015–2026</title>
+<link rel="stylesheet" href="./assets/style.css">
+</head>
+<body>
+<header>
+<div class="top">
+<div>
+<div class="eyebrow">STABLECOIN EVENT STUDY</div>
+<h1>제도화의 순간, 시장은 어떻게 움직였나</h1>
+<p>2015.01.01 – 2026.09.30 · 일별 가격과 정책·신뢰·사업 이벤트</p>
+</div>
+<div class="badge">15개 시계열 · 41개 이벤트 · 41,491개 관측치</div>
+</div>
+</header>
+<main>
+<div class="toolbar">
+<div class="ranges">
+<button data-range="all" class="active">전체 2015–2026</button>
+<button data-range="2020">2020 이후</button>
+<button data-range="2023">2023 위기</button>
+<button data-range="2025">2025 입법</button>
+<button data-range="2026">2026 후속</button>
+</div>
+<div class="controls">
+<input aria-label="시작일" id="startDate" type="date" value="2015-01-01" min="2015-01-01" max="2026-09-30">
+<span>~</span>
+<input aria-label="종료일" id="endDate" type="date" value="2026-09-30" min="2015-01-01" max="2026-09-30">
+<button id="applyRange">적용</button>
+</div>
+</div>
+<section class="panel eventfocus" id="eventFocus">
+<div class="focushead">
+<div>
+<span class="tag">선택 이벤트</span>
+<div class="sub">표의 행 또는 차트의 이벤트 점을 누르면 비교됩니다.</div>
+</div>
+<div class="controls">
+<select id="eventSelect" aria-label="분석할 이벤트">
+</select>
+<select id="windowSelect" aria-label="이벤트 분석 구간">
+<option value="d0">당일 [0]</option>
+<option value="d1">당일~다음 관측일 [0,+1]</option>
+<option value="m1p1">전후 [-1,+1]</option>
+<option value="d3">[0,+3]</option>
+<option value="d5">[0,+5]</option>
+<option value="d10">[0,+10]</option>
+</select>
+</div>
+</div>
+<div id="focusNote" class="focusnote">
+</div>
+<div class="metrics" id="metrics">
+</div>
+<div class="notice" id="focusCaution">
+</div>
+</section>
+<div class="grid">
+<section class="panel">
+<div class="panelhead">
+<div>
+<h2>대표 코인</h2>
+<p class="sub">각 자산의 선택기간 첫 관측값 = 100 · 기준일은 서로 다를 수 있음</p>
+</div>
+<select id="cryptoMode" aria-label="코인 차트 표시">
+<option value="indexLog">지수 · 로그축</option>
+<option value="index">지수 · 선형축</option>
+<option value="priceLog">달러 가격 · 로그축</option>
+</select>
+</div>
+<div class="legend" id="cryptoLegend">
+</div>
+<div class="chart" id="cryptoChart">
+</div>
+<div class="chartfoot">이벤트 점의 초록·빨강은 BTC의 관측 당일 상승·하락. 점을 눌러 이벤트 확인.</div>
+</section>
+<section class="panel">
+<div class="panelhead">
+<div>
+<h2>발행사와 관련 기업</h2>
+<p class="sub">수정주가 지수 · 선택기간 각 종목 첫 관측값 = 100 · 로그축</p>
+</div>
+</div>
+<div class="legend" id="stockLegend">
+</div>
+<div class="chart" id="stockChart">
+</div>
+<div class="chartfoot">CRCL은 직접 발행사. COIN·PYPL·HOOD·V·MA는 사업 연관 기업. SPY는 비교군.</div>
+</section>
+<section class="panel">
+<div class="panelhead">
+<div>
+<h2>USDT·USDC 가격 안정성</h2>
+<p class="sub">페그 이탈 = (종가 − $1) × 10,000bp · 일중 최저가격과 다름</p>
+</div>
+<select id="stableMode" aria-label="스테이블코인 표시">
+<option value="bp">달러 페그 이탈 (bp)</option>
+<option value="usd">종가 (USD)</option>
+</select>
+</div>
+<div class="legend" id="stableLegend">
+</div>
+<div class="chart small" id="stableChart">
+</div>
+<div class="chartfoot">초기 저유동성·거래소 구성 영향을 포함한 공급자 집계값. 극값의 체결 가능성을 뜻하지 않음.</div>
+</section>
+<section class="panel">
+<div class="panelhead">
+<div>
+<h2>이벤트 전후 경로</h2>
+<p class="sub" id="eventChartSub">
+</p>
+</div>
+<select id="eventGroup" aria-label="이벤트 경로 자산">
+<option value="risk">코인·발행 관련주 수익률 (%)</option>
+<option value="stable">USDT·USDC 페그 이탈 (bp)</option>
+<option value="rates">미 국채 수익률 변화 (bp)</option>
+</select>
+</div>
+<div class="legend" id="eventLegend">
+</div>
+<div class="chart small" id="eventChart">
+</div>
+<div class="chartfoot">코인 1칸 = 달력일 / 주식·국채 1칸 = 거래 관측일. 같은 칸의 실제 날짜가 다릅니다.</div>
+</section>
+</div>
+<p class="notice">실선은 관측 가격, 이벤트 주석은 해당 시점의 뉴스입니다. 가격 변화는 인과효과의 추정치가 아닙니다. 모든 데이터와 계산값이 파일에 포함되어 인터넷 없이 열립니다.</p>
+<section class="panel section">
+<div class="panelhead">
+<div>
+<h2>이벤트별 시장 반응</h2>
+<p class="sub">초록 = 상승, 빨강 = 하락. USDT·USDC는 수익률 대신 구간 내 가격 변화(bp). N/A = 당시 미상장·미출시 또는 기준 관측값 부족.</p>
+</div>
+<div class="controls">
+<select id="category" aria-label="이벤트 유형">
+<option value="all">모든 이벤트</option>
+<option>입법</option>
+<option>규제</option>
+<option>신뢰충격</option>
+<option>채택</option>
+<option>기업</option>
+<option>정책지원</option>
+</select>
+<select id="stockMetric" aria-label="주식 수익률 종류">
+<option value="raw">주식: 실제 수익률</option>
+<option value="excess">주식: SPY 초과수익률</option>
+</select>
+<label class="togglehint">
+<input type="checkbox" id="rangeEvents"> 위 기간만</label>
+</div>
+</div>
+<div class="tablewrap" id="heatmap">
+</div>
+<p class="sub">‘중복’은 선택 구간에 다른 수록 이벤트가 포함된 경우입니다. SPY 초과수익률은 단순 차감(β=1)이며 시장모형 CAR가 아닙니다.</p>
+</section>
+<div class="layout-bottom">
+<section class="panel">
+<div class="panelhead">
+<div>
+<h2>선택 이벤트의 해석과 출처</h2>
+<div id="selectedTitle" class="selectedTitle">
+</div>
+</div>
+<button id="zoomEvent">이벤트 주변 60일 보기</button>
+</div>
+<div id="eventDetail" class="detail-text">
+</div>
+<div class="quality">GENIUS는 지급형 스테이블코인 규율, CLARITY는 가상자산 시장구조·관할 법안입니다. 2025년 GENIUS 제정과 2026년 CLARITY 절차표결 부결을 구분했습니다.</div>
+</section>
+<section class="panel movers">
+<div class="panelhead">
+<div>
+<h2>기간 내 큰 상승·하락일</h2>
+<p class="sub">선택 자산의 일간 수익률 상·하위 각 3일. 주변 이벤트는 원인 판정이 아님.</p>
+</div>
+<select id="moverAsset" aria-label="급등락 자산">
+</select>
+</div>
+<div id="movers">
+</div>
+<p class="sub">±3일 안에 수록 이벤트가 없으면 ‘대응 이벤트 미확인’으로 남겼습니다. 모든 급등락을 스테이블코인 뉴스로 설명하지 않습니다.</p>
+</section>
+</div>
+<details class="panel method" open>
+<summary>분석 기준과 데이터 범위</summary>
+<article>
+<div class="quality">초기 ETH·USDT와 USDC 출시 직후는 Coin Metrics PriceUSD로 보완했습니다. 이후는 Yahoo Finance 일별 데이터입니다. 공급자 변경 지점의 수익률에는 방법론 차이가 포함될 수 있습니다. USDT의 2015~2016년 큰 괴리와 USDC의 일부 2020년 종가 극값은 원자료대로 보존했으며 개별 거래소 실거래 검증은 하지 않았습니다.</div>
+<ol>
+<li>
+<strong>독립변수:</strong> 발표·표결·시행·신뢰충격 이벤트의 날짜와 유형. CSV로 이벤트 더미를 내려받을 수 있습니다. 입법 ‘진전/차질’은 정책 방향 분류이며 수익률 부호를 예측하는 값이 아닙니다.</li>
+<li>
+<strong>종속변수:</strong> BTC·ETH·SOL의 달러 가격 및 수익률, 상장사 수정주가 수익률, USDT·USDC 가격·페그 이탈. SPY·BIL·IRX·TNX는 시장·국채 비교 변수입니다. 국채 수익률은 종목 가격과 같은 의미가 아닙니다.</li>
+<li>
+<strong>이벤트 창:</strong> 당일 t0는 발표일 이후 첫 유효 관측일. 장후 발표를 확인한 SVB 노출·CLARITY 연기 등은 반응 가능 날짜로 이동했습니다. [0,+k] 수익률은 P(t+k)/P(t−1)−1, [-1,+1]은 P(t+1)/P(t−2)−1. 단위는 %입니다. 주식·ETF는 공급자의 수정종가(분할·배당 반영), 코인은 일별 종가입니다.</li>
+<li>
+<strong>시계:</strong> 코인은 공급자 UTC 날짜, 주식은 미국 거래일 날짜. 발표 시각이 완전히 검증되지 않은 사건은 일자 기준 탐색 분석입니다. 발표 이전 누출·기대 형성, 주말, 동시 뉴스가 결과에 영향을 줍니다. 같은 날짜의 코인과 주식 수익률은 정확히 동시인 24시간 창이 아닙니다.</li>
+<li>
+<strong>결측 처리:</strong> 상장·출시 전, 휴장일은 null. 보간·전일 값 채움 없이 계산했습니다. 연속선은 실제 관측점을 잇습니다. 2015년 이전 값 및 2026년 10월 값은 분석에서 제외했습니다. CRCL 상장일은 전일 종가가 없어 일간 수익률 N/A입니다.</li>
+<li>
+<strong>발행사 구분:</strong> CRCL은 Circle의 상장주가. USDT는 Tether의 토큰 가격이며 발행기업 주가가 아닙니다. Tether·Paxos에 임의의 상장 티커를 부여하지 않았습니다. PYUSD의 발행사는 Paxos, PYPL은 연관 사업자입니다. 관련주의 과거 전체 수익률이 그 당시부터 스테이블코인 사업에 노출되었다는 의미는 아닙니다.</li>
+<li>
+<strong>해석 범위:</strong> 수록 이벤트는 공식 입법·감독 발표와 주요 사업·신뢰 사건의 선별 목록으로, 모든 뉴스의 전수조사는 아닙니다. 사후 가격 반응을 보고 양호한 이벤트만 고르지 않았습니다. 통계적 유의성·인과성·실행 가능한 매매전략은 검증하지 않았습니다. 후속 연구에서 시장모형, 금리·대선·거시 뉴스, 이벤트 중복 및 다중검정을 통제해야 합니다.</li>
+<li>
+<strong>첨부자료 반영:</strong> ‘서기록(10.09)’의 미국 입법 타임라인·이벤트 윈도우 비교 방향을 따랐습니다. KB증권 STO/RWA 보고서는 국내 제도 비교의 배경자료이며 이 대시보드의 가격 데이터 출처가 아닙니다.</li>
+</ol>
+<div class="coverage" id="coverage">
+</div>
+</article>
+</details>
+<details class="panel method">
+<summary>41개 이벤트의 원문 링크</summary>
+<article>
+<ol class="source-list" id="sources">
+</ol>
+</article>
+</details>
+<div class="toolbar section">
+<div class="actions">
+<button id="downloadPrices">일별 가격 CSV</button>
+<button id="downloadEvents">이벤트 목록 CSV</button>
+<button id="downloadReturns">이벤트 반응 CSV</button>
+<button id="downloadDummies">날짜별 이벤트 더미 CSV</button>
+<button id="downloadData">전체 데이터 JSON</button>
+</div>
+<span class="status">수집·분석 기준: 2026.10.11 · 가격 관측 종료: 2026.09.30</span>
+</div>
+<div class="foot">미국 제도화 벤치마크 · 관측된 동시 움직임을 비교하는 탐색적 이벤트 분석</div>
+</main>
+<div id="tooltip" class="tooltip" role="tooltip">
+</div>
+<script src="./assets/data.js">
+</script>
+<script src="./assets/app.js">
+</script>
+</body>
+</html>
+
