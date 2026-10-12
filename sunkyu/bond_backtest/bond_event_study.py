@@ -14,6 +14,7 @@ bond_event_study.py
 """
 
 import os
+import sys
 import unicodedata
 import warnings
 import pandas as pd
@@ -21,7 +22,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 import matplotlib.font_manager as fm
+from fredapi import Fred
 from scipy import stats
+
+# config.py에서 API 키 로드
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+from config import FRED_API_KEY
 
 warnings.filterwarnings("ignore")
 
@@ -89,8 +95,7 @@ EVENT_CSV = os.path.join(DATA_DIR, "stablecoin_events.csv")
 # ──────────────────────────────────────────────────────────────
 # 1. FRED 국채 수익률 로드
 # ──────────────────────────────────────────────────────────────
-FRED_BASE = "https://fred.stlouisfed.org/graph/fredgraph.csv"
-START     = "2015-01-01"
+START = "2015-01-01"
 
 MATURITIES = {          # FRED 코드 → 표시 레이블
     "DGS1MO": "1M",
@@ -103,9 +108,10 @@ MATURITIES = {          # FRED 코드 → 표시 레이블
     "DGS30":  "30Y",
 }
 
+_fred = Fred(api_key=FRED_API_KEY)
+
 def get_fred(series_id: str, start: str = START) -> pd.Series:
-    url = f"{FRED_BASE}?id={series_id}&cosd={start}"
-    s = pd.read_csv(url, index_col=0, parse_dates=True, na_values=".").iloc[:, 0]
+    s = _fred.get_series(series_id, observation_start=start)
     s.name = series_id
     s.index.name = "date"
     return s
