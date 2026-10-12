@@ -19,15 +19,33 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
+import matplotlib.font_manager as fm
 from scipy import stats
 
 warnings.filterwarnings("ignore")
+
+# ── 한글 폰트 설정 (macOS)
+def _set_korean_font():
+    candidates = [
+        "AppleGothic",
+        "Apple SD Gothic Neo",
+        "NanumGothic",
+        "Malgun Gothic",
+    ]
+    available = {f.name for f in fm.fontManager.ttflist}
+    for name in candidates:
+        if name in available:
+            plt.rcParams["font.family"] = name
+            break
+    plt.rcParams["axes.unicode_minus"] = False  # 마이너스 기호 깨짐 방지
+
+_set_korean_font()
 
 # ──────────────────────────────────────────────────────────────
 # 0. 경로 설정
 # ──────────────────────────────────────────────────────────────
 BASE_DIR  = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR  = os.path.join(BASE_DIR, "data")
+DATA_DIR  = os.path.join(BASE_DIR, "..", "data")
 OUT_DIR   = os.path.join(BASE_DIR, "output")
 os.makedirs(OUT_DIR, exist_ok=True)
 
