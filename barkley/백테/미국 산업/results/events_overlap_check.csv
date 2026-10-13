@@ -1,0 +1,22 @@
+﻿event_id,t0_list,title,direction,t0_pos,t0,"overlap_[-5,+5]","clean_[-5,+5]","overlap_[-1,+1]","clean_[-1,+1]","overlap_[0,0]","clean_[0,0]"
+M01,2019-04-26,"뉴욕 검찰, Bitfinex·Tether 자금 유용 소송 공개",-1,833,2019-04-26,FOMC 05/01,False,,True,,True
+M02,2020-09-21,"OCC, 은행의 스테이블코인 준비금 보관 허용(IL 1172)",1,1187,2020-09-21,FOMC 09/16,False,,True,,True
+M03,2021-01-04,"OCC, 은행의 스테이블코인 결제 활용 허용(IL 1174)",1,1259,2021-01-04,,True,,True,,True
+M04,2021-10-15,"SEC, 첫 BTC 선물 ETF(BITO) 허용 보도",1,1457,2021-10-15,CPI 10/13,False,,True,,True
+M05,2023-02-13,"Paxos, NYDFS 명령으로 BUSD 신규 발행 중단",-1,1790,2023-02-13,CPI 02/14,False,CPI 02/14,False,,True
+M06,2023-06-05,"SEC, Binance(6/5)·Coinbase(6/6) 제소",-1,1867,2023-06-05,,True,,True,,True
+M07,2023-06-15,"BlackRock, 현물 BTC ETF 신청",1,1875,2023-06-15,"FOMC 06/14, CPI 06/13",False,FOMC 06/14,False,,True
+M08,2023-07-13,"SEC v. Ripple 1심, 거래소 판매분은 증권 아님 판결",1,1893,2023-07-13,CPI 07/12,False,CPI 07/12,False,,True
+M09,2023-08-29,"Grayscale, SEC 상대 항소심 승소(현물 ETF 거부 위법)",1,1926,2023-08-29,,True,,True,,True
+M10,2024-01-11,"SEC, 현물 BTC ETF 11종 승인",1,2019,2024-01-11,CPI 01/11,False,CPI 01/11,False,CPI 01/11,False
+M11,2024-05-20,ETH 현물 ETF 승인 확률 급등(5/23 19b-4 승인),1,2108,2024-05-20,CPI 05/15,False,,True,,True
+M12,2025-01-24,SEC SAB 122(SAB 121 폐지) + 디지털자산 행정명령,1,2278,2025-01-24,FOMC 01/29,False,,True,,True
+M13,2025-02-04,GENIUS Act 상원 발의,1,2285,2025-02-04,FOMC 01/29,False,,True,,True
+M14,2025-03-07,전략적 비트코인 비축 행정명령(+3/7 OCC IL 1183·백악관 서밋),1,2307,2025-03-07,CPI 03/12,False,,True,,True
+M15,2025-03-13,GENIUS Act 상원 은행위 통과(18-6),1,2311,2025-03-13,"FOMC 03/19, CPI 03/12",False,CPI 03/12,False,,True
+M16,2025-05-08,GENIUS Act 상원 절차표결 부결,-1,2350,2025-05-08,"FOMC 05/07, CPI 05/13",False,FOMC 05/07,False,,True
+M17,2025-06-10,CLARITY Act 하원 금융서비스위 통과,1,2372,2025-06-10,CPI 06/11,False,CPI 06/11,False,,True
+M18,2025-06-18,GENIUS Act 상원 본회의 통과(68-30),1,2378,2025-06-18,"FOMC 06/18, CPI 06/11",False,FOMC 06/18,False,FOMC 06/18,False
+M19,2025-07-17,GENIUS·CLARITY 하원 통과 → 7/18 대통령 서명,1,2397,2025-07-17,CPI 07/15,False,,True,,True
+M20,2026-01-15,CLARITY Act 상원 은행위 마크업 연기(Coinbase 지지 철회),-1,2523,2026-01-15,CPI 01/13,False,,True,,True
+M21,2026-05-14,CLARITY Act 상원 은행위 통과(15-9),1,2605,2026-05-14,CPI 05/12,False,,True,,True
