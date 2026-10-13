@@ -5,8 +5,8 @@ Korea_variable_backtest.py
 : 디지털 자산 제도화 이벤트 → KOSPI · KOSDAQ · 국고채 3년 · 10년 충격 분석
 
 데이터:
-  KOSPI / KOSDAQ : pykrx (KRX 공식 데이터)
-  국고채 3년·10년 : ECOS API 817Y002
+  KOSPI / KOSDAQ : FinanceDataReader (KRX 공식 데이터 기반 GitHub 캐시, 결측치 없음)
+  국고채 3년·10년 : ECOS API 817Y002 (한국은행 ECOS_API_KEY)
 
 이벤트 t0 : 한국 주식 t0 (한국 시장 첫 반영일)
 이벤트 창  : [-5, +5] (메인) / [-1, +1] (보조)
