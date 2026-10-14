@@ -212,7 +212,7 @@ def collect_and_cache(symbol, cfg):
     if os.path.exists(fr_raw_path):
         print(f"  [{symbol}] 펀딩 레이트 캐시 로드: {fr_raw_path}")
         fr_raw = pd.read_csv(fr_raw_path, parse_dates=["fundingTime"])
-        fr_raw["fundingTime"] = pd.to_datetime(fr_raw["fundingTime"], utc=True)
+        fr_raw["fundingTime"] = pd.to_datetime(fr_raw["fundingTime"], format="ISO8601", utc=True)
     else:
         print(f"  [{symbol}] 펀딩 레이트 수집 중 ({cfg['fr_start']} ~ 현재)...")
         start_dt = datetime.fromisoformat(cfg["fr_start"]).replace(tzinfo=timezone.utc)
