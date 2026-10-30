@@ -61,3 +61,19 @@ def simulate_vasicek(r0, a, b, sigma, months=36, n_paths=1000, seed=42, dt=DT):
     for t in range(months):
         paths[:, t + 1] = b + (paths[:, t] - b) * decay + step_sd * rng.standard_normal(n_paths)
     return paths
+
+
+def simulate_market_consistent(forwards, a, sigma, n_paths=1000, seed=42, dt=DT):
+    """시장 일치 모형: r(t) = f(0, t) + x(t) 로 월간 금리 경로를 만든다. (메인 분석용)
+
+    forwards: k번째 달에 적용될 현재 선도금리 f(0, t_k) 배열(%). 길이 L → 경로도 L개 시점
+    x(t):     평균 0으로 돌아가는 Vasicek 충격 dx = −a·x·dt + σ·dW, x(0) = 0
+              → 경로들의 평균이 선도금리와 같아서, 시나리오와 플로어 가격의 기준이 일치한다
+
+    참고: 엄밀한 Hull-White 모형에는 σ²/(2a²)·(1 − e^(−at))² 만큼의 볼록성 보정이 더 붙는다.
+          a = 0.093, σ = 0.64%p에서 3년 뒤 약 1.4bp라 무시한다.
+    반환: (n_paths, L) 배열
+    """
+    forwards = np.asarray(forwards, dtype=float)
+    x = simulate_vasicek(0.0, a, 0.0, sigma, months=len(forwards) - 1, n_paths=n_paths, seed=seed, dt=dt)
+    return forwards[np.newaxis, :] + x

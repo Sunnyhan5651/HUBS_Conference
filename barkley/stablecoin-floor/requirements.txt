@@ -1,9 +1,11 @@
 # 설치: python -m venv .venv  →  .venv\Scripts\activate  →  pip install -r requirements.txt
 pandas==3.1.0
 numpy==2.5.4
+scipy==1.18.1
+statsmodels==0.15.0
 matplotlib==3.11.2
 requests==2.34.2
 pyarrow==26.0.0
-statsmodels==0.15.0
 jupyter==1.1.1
 ipykernel==7.4.0
+nbconvert==7.17.2
